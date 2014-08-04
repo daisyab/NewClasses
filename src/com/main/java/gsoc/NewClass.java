@@ -24,7 +24,9 @@ public class NewClass extends JavaCompiler{
      */
     public static void main(String[] args) {
         NewClass nc = new NewClass(contexts);
-        nc.parse("/home/guestu/NetBeansProjects/NewClass/src/newclass/SecondClass.java");        
+        
+        //FIXME: deprecated method, use instead nc.parse(JavaFileObject)
+        nc.parse("/home/guestu/NetBeansProjects/NewClass/src/newclass/SecondClass.java"); //FIXME deprecated method, use instead     
     }
 
     public NewClass(Context cntxt) {
