@@ -11,13 +11,7 @@ import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.List;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
-import javax.tools.StandardLocation;
-import static javax.tools.StandardLocation.SOURCE_PATH;
 
 /**
  *
@@ -25,19 +19,11 @@ import static javax.tools.StandardLocation.SOURCE_PATH;
  */
 public class NewClass extends JavaCompiler{
      static Context contexts = new Context();
-    private static StandardLocation file =SOURCE_PATH ;
-    
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         NewClass nc = new NewClass(contexts);
-        JavaFileManager jfo = nc.fileManager;
-        System.out.printf("%s", file);
-        String name = jfo.getJavaFileForOutput(SOURCE_PATH, fullVersion(), JavaFileObject.Kind.SOURCE, null).getName();
-        System.out.printf("%s", name);
-        String files = "/home/guestu/NetBeansProjects/NewClass/src/newclass/SecondClass.java";
-        
         nc.parse("/home/guestu/NetBeansProjects/NewClass/src/newclass/SecondClass.java");        
     }
 
@@ -46,17 +32,10 @@ public class NewClass extends JavaCompiler{
     }   
     
      @Override
-    public JCTree.JCCompilationUnit parse(JavaFileObject filename) {
-        JavaFileObject prev = log.useSource(filename);
-        try {
-            JCTree.JCCompilationUnit t = parse(filename, readSource(filename));
-            if (t.endPositions != null)
-                log.setEndPosTable(filename, t.endPositions);
-            return t;
-        } finally {
-            log.useSource(prev);
+    public JCTree.JCCompilationUnit parse(String filename) {
+        JavacFileManager fm = (JavacFileManager)fileManager;
+
+        JavaFileObject next = fm.getJavaFileObjectsFromStrings(List.of(filename)).iterator().next();
+        return parse(next);
         }
     }
-    
-    
-}
